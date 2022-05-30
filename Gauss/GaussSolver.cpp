@@ -20,24 +20,21 @@ std::vector<Vector> GaussSolver::solve(const Matrix& A, const Vector& b){
     int m = M.lines;
 
     for (int j = 0; j < n; j++) {
-        int line = -1;
+        double maxElement = 0;
+        int line = i;
         for (int k = i; k < m; k++) {
-            if (M[k][j] != 0) {
+            if (abs(M[k][j]) > abs(maxElement)) {
+                maxElement = M[k][j];
                 line = k;
-                break;
             }
         }
-
-        if (line == -1) {
+        if (abs(maxElement) < 1e-10) {
             continue;
         }
-
         Vector tmp = M[i];
-
         M[i] = M[line];
         M[line] = tmp;
-        M[i] *= (1 / M[i][j]);
-
+        M[i] *= (1 / maxElement);
         for (int l = 0; l < i; l++) {
             M[l] -= M[i] * M[l][j];
         }
